@@ -1,9 +1,17 @@
 # JavaScript 30 #2: CSS and JavaScript Clock
 
-A clock that takes in the time from JavaScript and updates the hands based on the current hour, minutes, and seconds.
+An app that gets the time from JavaScript and displays it as hands on a clock face, updated once per second.
+
+
+## Key Points
+
+The original version of this clock simply retrieved the time once per second and displayed it. The problem was that when the seconds rolled back from 59 to 0 at the top of the clock face, the seconds hand would reverse instead of incrementing forward.
+
+This was solved by retrieving the current time once at initiation and then incrementing the seconds (once per second) after that. This way, the seconds count up indefinitely rather than ever resetting to zero. (The hours and minutes are still retrieved once per second. They do not have the same CSS transition as the second hand, which was causing this glitch.)
+
+Just for fun, I also restyled each hand on the clock so that it would be more obvious which was which.
 
 
 ## Future Iterations
 
-- Fix transition from 59 seconds to 0 seconds. (Right now it rolls backwards around the clock from 59 to 0.)
 - Convert to object literal.
