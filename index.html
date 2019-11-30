@@ -102,31 +102,26 @@
   <script>
 
     const clock = {
+      // Retrieve current time:
       now: new Date(),
+      // Clock hands:
       secondHand: document.querySelector('.second-hand'),
       minuteHand: document.querySelector('.min-hand'),
       hourHand: document.querySelector('.hour-hand'),
-      getTime: () => {
-
-        // Retrieve current time:
-        let seconds = clock.now.getSeconds(); // Handled independently so they can be incremented later.
-        let minutes;
-        let hour;
-        function minutesHour() {
-          minutes = clock.now.getMinutes();
-          hour = clock.now.getHours();
+      // Main function:
+      initTime: () => {
+        let seconds = clock.now.getSeconds(); // Seconds handled independently so they can be incremented indefinitely.
+        function displayTime() {
+          let minutes = clock.now.getMinutes();
+          let hour = clock.now.getHours();
           // Convert hours to 12-hour time:
           if (hour > 12) {
             hour -= 12;
           }
-        }
-        minutesHour();
-
-        function displayTime() {
           // Convert to degrees:
-          let secondsDegrees = ((seconds * 6) + 90);
-          let minutesDegrees = ((minutes * 6) + 90);
-          let hourDegrees = ((hour * 30) + 90);
+          const secondsDegrees = ((seconds * 6) + 90);
+          const minutesDegrees = ((minutes * 6) + 90);
+          const hourDegrees = ((hour * 30) + 90);
           // Display time:
           clock.secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
           clock.minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
@@ -134,19 +129,18 @@
         }
         displayTime();
         
-        // Update time every 1 second:
+        // Update clock every 1 second:
         setInterval(function() {
           // Increment seconds indefinitely so they never roll back to zero and create a CSS transition jitter:
           seconds++;
           // Retrieve the updated minutes and hour from the Date object:
           clock.now = new Date();
-          minutesHour();
           displayTime();
         }, 1000);
       }
     }
 
-    clock.getTime();
+    clock.initTime();
 
   </script>
 

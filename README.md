@@ -13,7 +13,4 @@ Just for fun, I also restyled each hand on the clock so that it would be more ob
 
 I also added a conversion from the default 24-hour time to 12-hour time.
 
-
-## Future Iterations
-
-- Convert to object literal.
+Refactored as an object literal.
