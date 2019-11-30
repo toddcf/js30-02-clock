@@ -6,15 +6,14 @@
 </head>
 <body>
 
-
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
         <div class="hand min-hand"></div>
         <div class="hand second-hand"></div>
+        <div class="hub"></div>
       </div>
     </div>
-
 
   <style>
     
@@ -36,12 +35,12 @@
     }
 
     .clock {
-      border: 20px solid white;
+      border: 20px solid #fff;
       border-radius: 50%;
       box-shadow:
         0 0 0 4px rgba(0,0,0,0.1),
         inset 0 0 0 3px #EFEFEF,
-        inset 0 0 10px black,
+        inset 0 0 10px #000,
         0 0 10px rgba(0,0,0,0.2);
       height: 30rem;
       margin: 50px auto;
@@ -73,6 +72,17 @@
       width: 30%;
     }
 
+    .hub {
+      background: #fff;
+      border-radius: 50%;
+      height: 15px;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 15px;
+    }
+
     .min-hand {
       background: #000;
       height: 5px;
@@ -91,57 +101,52 @@
 
   <script>
 
-    let seconds;
-    let secondsDegrees;
-    const secondHand = document.querySelector('.second-hand');
+    const clock = {
+      now: new Date(),
+      secondHand: document.querySelector('.second-hand'),
+      minuteHand: document.querySelector('.min-hand'),
+      hourHand: document.querySelector('.hour-hand'),
+      getTime: () => {
 
-    let minutes;
-    let minutesDegrees;
-    const minuteHand = document.querySelector('.min-hand');
+        // Retrieve current time:
+        let seconds = clock.now.getSeconds(); // Handled independently so they can be incremented later.
+        let minutes;
+        let hour;
+        function minutesHour() {
+          minutes = clock.now.getMinutes();
+          hour = clock.now.getHours();
+          // Convert hours to 12-hour time:
+          if (hour > 12) {
+            hour -= 12;
+          }
+        }
+        minutesHour();
 
-    let hour;
-    let hourDegrees;
-    const hourHand = document.querySelector('.hour-hand');
-
-    function initDate() {
-      
-      // Get the current time:
-      const now = new Date();
-      seconds = now.getSeconds();
-      minutes = now.getMinutes();
-      hour = now.getHours();
-
-      // Display the initial time:
-      displayHands();
-      
-      // Begin incrementing once per second:
-      setInterval(incrementDate, 1000);
-
+        function displayTime() {
+          // Convert to degrees:
+          let secondsDegrees = ((seconds * 6) + 90);
+          let minutesDegrees = ((minutes * 6) + 90);
+          let hourDegrees = ((hour * 30) + 90);
+          // Display time:
+          clock.secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+          clock.minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+          clock.hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+        }
+        displayTime();
+        
+        // Update time every 1 second:
+        setInterval(function() {
+          // Increment seconds indefinitely so they never roll back to zero and create a CSS transition jitter:
+          seconds++;
+          // Retrieve the updated minutes and hour from the Date object:
+          clock.now = new Date();
+          minutesHour();
+          displayTime();
+        }, 1000);
+      }
     }
 
-    // Position the hands on the clock:
-    function displayHands() {
-
-      secondsDegrees = ((seconds * 6) + 90);
-      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
-      
-      minutesDegrees = ((minutes * 6) + 90);
-      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
-      
-      hourDegrees = ((hour * 3) + 90);
-      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
-
-    }
-
-    function incrementDate() {
-      seconds++;
-      const now = new Date();
-      minutes = now.getMinutes();
-      hour = now.getHours();
-      displayHands(); 
-    }
-
-    initDate();
+    clock.getTime();
 
   </script>
 
